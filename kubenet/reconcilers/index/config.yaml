@@ -1,0 +1,22 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  #recommended format <group>.<resource>.<unique name within the namespace>
+  name: infra.kuid.dev.nodes.ids
+spec: 
+  conditionType: IndexReady
+  for: 
+    group: core.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkDesign
+    selector: {}
+  owns:
+  - group: ipam.be.kuid.dev
+    version: v1alpha1
+    kind: IPIndex
+  - group: as.be.kuid.dev
+    version: v1alpha1
+    kind: ASIndex
+  - group: genid.be.kuid.dev
+    version: v1alpha1
+    kind: GENIDIndex

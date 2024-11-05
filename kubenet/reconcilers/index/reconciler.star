@@ -3,6 +3,7 @@ load("core.network.kubenet.dev.networkdesigns.star", "get_ipindex", "get_asindex
 def reconcile(self):
   # self = networkdesign
   ipindex = get_ipindex(self)
+  print("ipindex", ipindex)
   rsp = client_create(ipindex)
   if rsp["error"] != None:
     return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
@@ -12,9 +13,9 @@ def reconcile(self):
   if rsp["error"] != None:
     return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
   
-  genidindex = get_genidindex(self)
-  rsp = client_create(genidindex)
-  if rsp["error"] != None:
-    return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
+  #genidindex = get_genidindex(self)
+  #rsp = client_create(genidindex)
+  #if rsp["error"] != None:
+  #  return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
 
   return reconcile_result(self, False, 0, "", False)

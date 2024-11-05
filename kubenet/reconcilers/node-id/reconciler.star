@@ -1,4 +1,4 @@
-load("core.network.kubenet.dev.networkdesigns.star", "get_node_ipclaims", "get_node_asclaims")
+load("core.network.kubenet.dev.networkdesigns.star", "get_network_design", "get_node_ipclaims", "get_node_asclaims")
 
 def reconcile(self):
   # self = node

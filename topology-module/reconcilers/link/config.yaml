@@ -1,0 +1,12 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  #recommended format <group>.<resource>.<unique name within the namespace>
+  name: infra.kuid.dev.links.link-ep
+spec:
+  conditionType: Ready
+  for: 
+    group: infra.kuid.dev
+    version: v1alpha1
+    kind: Link
+    selector: {}

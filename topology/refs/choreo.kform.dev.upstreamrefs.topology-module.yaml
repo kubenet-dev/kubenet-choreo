@@ -1,0 +1,11 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: UpstreamRef
+metadata:
+  name: kubenet
+spec:
+  type: crd
+  url: https://github.com/kubenet-dev/kubenet-choreo.git
+  directory: topology-module
+  ref:
+    type: hash
+    name: e758bc0e471f51e6a35c39c02b5b19b54c7c9ffa

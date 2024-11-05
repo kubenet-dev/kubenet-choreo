@@ -7,7 +7,7 @@ spec:
   url: https://github.com/kubenet-dev/apis.git
   ref:
     type: hash
-    name: 13e92b31895654ca5fa5eded861bb0816049c702
+    name: bdafcb27c7941828b73d761ccc1dfa9f426c5324
   includes:
   - device.network.kubenet.dev_nodetemplates
   - topo.kubenet.dev_topologies

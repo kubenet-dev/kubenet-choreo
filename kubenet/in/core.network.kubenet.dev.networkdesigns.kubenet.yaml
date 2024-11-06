@@ -21,9 +21,9 @@ spec:
       localAS: true
       routeReflectors:
       - kubenet.default.core01.ipv4
-    ebgp: 
-      asPool: 65000-65100
-      bfd: true
+    #ebgp: 
+    #  asPool: 65000-65100
+    #  bfd: true
     bgpEVPN: {}
   encapsulation: 
     vxlan: {}

@@ -9,7 +9,7 @@ def reconcile(self):
     # we dont return the error but wait for the network design retrigger
     return reconcile_result(self, False, 0, err, False)
   
-  if is_conditionready(network_design, "IndexReady") != True:
+  if is_conditionready(network_design, "ClaimReady") != True:
     return reconcile_result(self, True, 0, "link ip claims not ready", False)
         
   ip_claims = get_node_ipclaims(network_design, self)

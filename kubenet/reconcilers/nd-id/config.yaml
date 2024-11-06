@@ -1,0 +1,18 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  #recommended format <group>.<resource>.<unique name within the namespace>
+  name: core.network.kubenet.dev.networkdesigns.id
+spec: 
+  conditionType: ClaimReady
+  for: 
+    group: core.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkDesign
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'IndexReady' && c.status == 'True'): "true"
+  owns:
+  - group: as.be.kuid.dev
+    version: v1alpha1
+    kind: ASClaim

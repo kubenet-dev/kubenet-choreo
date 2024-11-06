@@ -3,7 +3,6 @@ load("core.network.kubenet.dev.networkdesigns.star", "get_ipindex", "get_asindex
 def reconcile(self):
   # self = networkdesign
   ipindex = get_ipindex(self)
-  print("ipindex", ipindex)
   rsp = client_create(ipindex)
   if rsp["error"] != None:
     return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])

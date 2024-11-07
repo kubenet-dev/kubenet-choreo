@@ -11,14 +11,12 @@ def reconcile(self):
 
   rps = get_routing_policies(self, network_design)
   for rp in rps:
-    print("routing_policy", rp)
     rsp = client_create(rp)
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
 
   pss = get_prefix_sets(self, network_design)
   for ps in pss:
-    print("prefix_set", ps)
     rsp = client_create(ps)
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
@@ -116,7 +114,6 @@ def get_prefixes(network_design, prefix_type, af):
   af_prefixes = []
   for prefix in prefixes:
     p = prefix.get("prefix", "")
-    print("get_prefixes", prefix, af, isIPv4(p), isIPv6(p))
     if af == "ipv4" and isIPv4(p):
       af_prefixes.append(p)
     if af == "ipv6" and isIPv6(p):

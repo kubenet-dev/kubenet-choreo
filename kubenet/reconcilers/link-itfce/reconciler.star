@@ -188,19 +188,6 @@ def get_endpoint_name(endpoint, name):
     return ".".join([partition,region,site,node,str(port),str(ep)])
   return ".".join([partition,region,site,node,str(port),str(ep), name])
 
-
-# this is a workaround until we fix the topology repo
-#def get_endpoint_name_with_adaptor(endpoint):
-#  partition = endpoint.get("partition", "")
-#  region = endpoint.get("region", "")
-#  site = endpoint.get("site", "")
-#  node = endpoint.get("node", "")
-#  port = int(endpoint.get("port", 0))
-#  adaptor = endpoint.get("adaptor", "")
-#  ep = int(endpoint.get("endpoint", 0))
-#
-#  return ".".join([partition,region,site,node,str(port),adaptor,str(ep)])
-
 def get_ipclaim(name, namespace):
   resource = get_resource("ipam.be.kuid.dev/v1alpha1", "IPClaim")
   rsp = client_get(name, namespace, resource["resource"])

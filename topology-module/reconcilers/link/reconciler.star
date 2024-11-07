@@ -10,7 +10,6 @@ def reconcile(self):
       ep.get("site", ""),
       ep.get("node", ""),
       str(int(ep.get("port", 0))),
-      ep.get("adaptor", ""),
       str(int(ep.get("endpoint", 0))),
     ]
     name = ".".join(items)

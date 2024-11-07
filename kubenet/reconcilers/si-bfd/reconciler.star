@@ -22,18 +22,18 @@ def get_bfd(si):
       "name": spec.get("name", ""),
       "id": int(spec.get("id", 0)),
       "enabled": True,
-      #"minTx": spec.get("minTx", None),
-      #"minRx": spec.get("minRx", None),
-      #"minEchoRx": spec.get("minEchoRx", None),
-      #"multiplier": spec.get("multiplier", None),
-      #"ttl": spec.get("ttl", None),
+      "minTx": spec.get("minTx", None),
+      "minRx": spec.get("minRx", None),
+      "minEchoRx": spec.get("minEchoRx", None),
+      "multiplier": spec.get("multiplier", None),
+      "ttl": spec.get("ttl", None),
     }
   
   # Create a new dictionary excluding None values
-  #filtered_bfd_spec = {}
-  ##for key, value in bfd_spec.items():
-   #   if value != None:
-   #       filtered_bfd_spec[key] = value
+  filtered_bfd_spec = {}
+  for key, value in bfd_spec.items():
+     if value != None:
+         filtered_bfd_spec[key] = value
 
   bfd = {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -42,7 +42,7 @@ def get_bfd(si):
       "name": si.get("metadata", {}).get("name", ""),
       "namespace": si.get("metadata", {}).get("namespace", ""),
     },
-    "spec": bfd_spec
+    "spec": filtered_bfd_spec
   }
   print("bfd", bfd)
   return bfd

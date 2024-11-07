@@ -1,0 +1,29 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+# name can be inferred from the filename or from the for resource
+metadata:
+  name: infra.kuid.dev.nodes.bgp
+spec: 
+  conditionType: BGPReady
+  for: 
+    group: infra.kuid.dev
+    version: v1alpha1
+    kind: Node
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'ClaimReady' && c.status == 'True'): "true"
+  owns:
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: BGP
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: BGPDynamicNeighbor
+  watches:
+  - group: core.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkDesign
+    selector:
+      match:
+        metadata.name: spec.partition
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"

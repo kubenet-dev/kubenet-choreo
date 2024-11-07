@@ -8,7 +8,6 @@ def reconcile(self):
 
   as_claims = get_asclaims(self)
   for as_claim in as_claims:
-    print("nd id asclaim", as_claim)
     rsp = client_create(as_claim)
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])

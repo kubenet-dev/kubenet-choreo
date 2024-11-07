@@ -1,0 +1,29 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  name: infra.kuid.dev.links.if
+spec: 
+  conditionType: InterfaceReady
+  for: 
+    group: infra.kuid.dev
+    version: v1alpha1
+    kind: Link
+    selector:
+      match:
+       # spec.internal: "true" # bool need to be presented as string
+        status.conditions.exists(c, c.type == 'ClaimReady' && c.status == 'True'): "true"
+  owns:
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: Interface
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: SubInterface
+  watches:
+  - group: core.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkDesign
+    selector:
+      match:
+        metadata.name: spec.partition
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"

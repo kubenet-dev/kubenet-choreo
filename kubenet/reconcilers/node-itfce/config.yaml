@@ -1,0 +1,32 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: Reconciler
+metadata:
+  #recommended format <group>.<resource>.<unique name within the namespace>
+  name: infra.kuid.dev.nodes.itfce
+spec: 
+  conditionType: InterfaceReady
+  for: 
+    group: infra.kuid.dev
+    version: v1alpha1
+    kind: Node
+    selector:
+      match:
+        status.conditions.exists(c, c.type == 'ClaimReady' && c.status == 'True'): "true"
+  owns:
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: Interface
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: SubInterface
+  - group: device.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkInstance
+  watches:
+  - group: core.network.kubenet.dev
+    version: v1alpha1
+    kind: NetworkDesign
+    selector:
+      match:
+        metadata.name: spec.partition
+        status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"

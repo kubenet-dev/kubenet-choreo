@@ -16,3 +16,6 @@ spec:
   - endpoints:
     - {node: node1, port: 1, endpoint: 1, adaptor: "sfp"}
     - {node: node2, port: 1, endpoint: 1, adaptor: "sfp"}
+  - endpoints:
+    - {node: node1, port: 2, endpoint: 1, adaptor: "sfp"}
+    - {node: node2, port: 2, endpoint: 1, adaptor: "sfp"}

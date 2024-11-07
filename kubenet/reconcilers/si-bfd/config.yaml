@@ -2,7 +2,7 @@ apiVersion: choreo.kform.dev/v1alpha1
 kind: Reconciler
 # name can be inferred from the filename or from the for resource
 metadata:
-  name: device.network.kubenet.dev.subinterfaaces.bfd
+  name: device.network.kubenet.dev.subinterfaces.bfd
 spec: 
   conditionType: BFDReady
   for: 

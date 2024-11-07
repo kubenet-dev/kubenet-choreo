@@ -39,7 +39,7 @@ def get_interfaces(link):
   namespace = link.get("metadata", {}).get("namespace", "")
   interfaces = []
   for endpoint in link.get("spec", {}).get("endpoints", []):
-    ep_name = get_endpoint_name_with_adaptor(endpoint)
+    ep_name = get_endpoint_name(endpoint, "interface")
     ep = get_resource("infra.kuid.dev/v1alpha1", "Endpoint")
     rsp = client_get(ep_name, namespace, ep["resource"])
     if rsp["error"] != None:
@@ -141,7 +141,7 @@ def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_desi
       "ipv4": local_addresses_ipv4,
       "ipv6": local_addresses_ipv6,
       "peer": {
-         "partition": remote_endpoint.get("partition", ""),
+        "partition": remote_endpoint.get("partition", ""),
         "region": remote_endpoint.get("region", ""),
         "site": remote_endpoint.get("site", ""),
         "node": remote_endpoint.get("node", ""),
@@ -190,16 +190,16 @@ def get_endpoint_name(endpoint, name):
 
 
 # this is a workaround until we fix the topology repo
-def get_endpoint_name_with_adaptor(endpoint):
-  partition = endpoint.get("partition", "")
-  region = endpoint.get("region", "")
-  site = endpoint.get("site", "")
-  node = endpoint.get("node", "")
-  port = int(endpoint.get("port", 0))
-  adaptor = endpoint.get("adaptor", "")
-  ep = int(endpoint.get("endpoint", 0))
-
-  return ".".join([partition,region,site,node,str(port),adaptor,str(ep)])
+#def get_endpoint_name_with_adaptor(endpoint):
+#  partition = endpoint.get("partition", "")
+#  region = endpoint.get("region", "")
+#  site = endpoint.get("site", "")
+#  node = endpoint.get("node", "")
+#  port = int(endpoint.get("port", 0))
+#  adaptor = endpoint.get("adaptor", "")
+#  ep = int(endpoint.get("endpoint", 0))
+#
+#  return ".".join([partition,region,site,node,str(port),adaptor,str(ep)])
 
 def get_ipclaim(name, namespace):
   resource = get_resource("ipam.be.kuid.dev/v1alpha1", "IPClaim")

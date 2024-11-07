@@ -6,8 +6,8 @@ conditionType = "BGPNeighborReady"
 def reconcile(self):
   si = self
 
-  partition = node.get("spec", {}).get("partition", "")
-  namespace = node.get("spec", {}).get("namespace", "")
+  partition = self.get("spec", {}).get("partition", "")
+  namespace = self.get("spec", {}).get("namespace", "")
   network_design, err = get_network_design(partition, namespace)
   if err != None:
     # we dont return the error but wait for the network design retrigger
@@ -46,11 +46,11 @@ def get_bgp_neighbors_per_af(si, af):
   local_node_name = ".".join([spec.get("partition", ""), spec.get("region", ""), spec.get("site", ""), spec.get("node", "")])
   peer_node_name = ".".join([peer.get("partition", ""), peer.get("region", ""), peer.get("site", ""), peer.get("node", "")])
 
-  local_asn, err = get_asclaim(local_node_name, network_design)
+  local_asn, err = get_asclaim(local_node_name, namespace)
   if err != None:
     return None, err
 
-  peer_asn, err = get_asclaim(peer_node_name, network_design)
+  peer_asn, err = get_asclaim(peer_node_name, namespace)
   if err != None:
     return None, err
   
@@ -79,7 +79,7 @@ def get_bgp_neighbors_per_af(si, af):
       },
     }
     bgp_neighbors.append(bgp_neighbor)
-  return bgp_neighbors
+  return bgp_neighbors, None
 
 def get_asclaim(name, namespace):
   resource = get_resource("as.be.kuid.dev/v1alpha1", "ASClaim")

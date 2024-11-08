@@ -18,7 +18,7 @@ def reconcile(self):
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
 
-  subinterfaces, err = get_subinterfaces(self, network_design)
+  subinterfaces, err = get_subinterfaces(self, network_design, interfaces)
   if err != None:
     return reconcile_result(self, True, 0, err, False)
   for si in subinterfaces:
@@ -44,7 +44,13 @@ def get_interfaces(link):
     rsp = client_get(ep_name, namespace, ep["resource"])
     if rsp["error"] != None:
       return None, rsp["error"]
-  
+    
+    node = get_resource("infra.kuid.dev/v1alpha1", "Node")
+    rsp = client_get(ep_name, namespace, ep["resource"])
+    if rsp["error"] != None:
+      return None, rsp["error"]
+    node_spec = node.get("spec", {})
+      
     interface = {
       "apiVersion": "device.network.kubenet.dev/v1alpha1",
       "kind": "Interface",
@@ -57,6 +63,8 @@ def get_interfaces(link):
         "region": endpoint.get("region", ""),
         "site": endpoint.get("site", ""),
         "node": endpoint.get("node", ""),
+        "provider": node_spec.get("provider", ""), # this comes from the node
+        "platformType": node_spec.get("platformType", ""), # this comes from the node
         "port": int(endpoint.get("port", 0)),
         "adaptor": endpoint.get("adaptor", ""),
         "endpoint": int(endpoint.get("endpoint", 0)),
@@ -70,8 +78,9 @@ def get_interfaces(link):
     }
     interfaces.append(interface)
   return interfaces, None
-      
-def get_subinterfaces(link, network_design):
+
+# returns ip info per endpoint of the link
+def get_subinterfaces(link, network_design, interfaces):
   namespace = link.get("metadata", {}).get("namespace", "")
   subinterfaces = []
 
@@ -105,19 +114,22 @@ def get_subinterfaces(link, network_design):
   for endpoint in link_endpoints:
     ep_name = get_endpoint_name(endpoint, "interface")
 
-    si = get_subinterface(ep_name, namespace, id, link_endpoints, eps, network_design)
+    si = get_subinterface(ep_name, namespace, id, link_endpoints, eps, network_design, interfaces)
     subinterfaces.append(si)
 
     id += 1
   return subinterfaces, None
 
 
-def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_design):
+def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_design, interfaces):
   local_addresses_ipv4, remote_addresses_ipv4 = get_addresses(id, eps_info, network_design, "ipv4", "ipv4numbered", "ipv4unnumbered")
   local_addresses_ipv6, remote_addresses_ipv6 = get_addresses(id, eps_info, network_design, "ipv6", "ipv6numbered", "ipv6unnumbered")
   
   local_endpoint = link_endpoints[id % 2]
   remote_endpoint = link_endpoints[(id + 1) % 2]
+
+  interface = interfaces[id % 2]
+  interface_spec = interface.get("spec", {})
 
   return {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -131,6 +143,8 @@ def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_desi
       "region": local_endpoint.get("region", ""),
       "site": local_endpoint.get("site", ""),
       "node": local_endpoint.get("node", ""),
+      "provider": interface_spec.get("provider", ""), # this comes from the node
+      "platformType": interface_spec.get("platformType", ""), # this comes from the node
       "port": int(local_endpoint.get("port", 0)),
       "adaptor": local_endpoint.get("adaptor", ""),
       "endpoint": int(local_endpoint.get("endpoint", 0)),

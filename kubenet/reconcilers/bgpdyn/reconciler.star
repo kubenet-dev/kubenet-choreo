@@ -4,6 +4,7 @@ def reconcile(self):
   # self is dynBGPNeighbor
   dyn_bgp_neighbor = self
 
+  # this should work for create/update and delete
   partition = self.get("spec", {}).get("partition", "")
   namespace = self.get("spec", {}).get("namespace", "")
   network_design, err = get_network_design(partition, namespace)
@@ -57,6 +58,10 @@ def update_sub_interface(dyn_bgp_neighbor, network_design):
   interfaces = insertion_sort(interfaces, lambda x: (x.get('id'), x.get('endpoint'), x.get('port'), x.get('name')))
 
   spec["interfaces"] = interfaces
+  if len(interfaces) == 0:
+    spec.pop("interfaces", None) 
+    
+
   return None
 
 def insertion_sort(arr, key_func):

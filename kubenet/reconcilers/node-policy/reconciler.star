@@ -70,6 +70,8 @@ def get_routing_policy(node, policy_name, statements = [], defaultAction = None)
   if defaultAction == None:
     defaultAction = {"result": "reject"}
 
+  # update platform and platformType
+
   nodespec = node.get("spec", {})
   policy = {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -83,6 +85,8 @@ def get_routing_policy(node, policy_name, statements = [], defaultAction = None)
       "region": nodespec.get("region", ""),
       "site": nodespec.get("site", ""),
       "node": nodespec.get("node", ""),
+      "provider": nodespec.get("provider", ""),
+      "platformType": nodespec.get("platformType", ""),
       "name": policy_name.lower(),
       "defaultAction": defaultAction,
     },

@@ -30,6 +30,7 @@ def reconcile(self):
   return reconcile_result(self, False, 0, "", False)
 
 def get_bgp_dyn_neighbor(node):
+  # update platform and platformType
   nodespec = node.get("spec", {})
   return {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -43,6 +44,8 @@ def get_bgp_dyn_neighbor(node):
       "region": nodespec.get("region", ""),
       "site": nodespec.get("site", ""),
       "node": nodespec.get("node", ""),
+      "provider": nodespec.get("provider", ""),
+      "platformType": nodespec.get("platformType", ""),
     },
   }
   
@@ -55,7 +58,7 @@ def get_bgp(node, network_design):
   routerID, err = get_routerid(node, network_design)
   if err != None:
     return None, err
-  
+    
   nodespec = node.get("spec", {})
   return {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -69,6 +72,8 @@ def get_bgp(node, network_design):
       "region": nodespec.get("region", ""),
       "site": nodespec.get("site", ""),
       "node": nodespec.get("node", ""),
+      "provider": nodespec.get("provider", ""),
+      "platformType": nodespec.get("platformType", ""),
       "as": asn,
       "routerID": routerID,
       "addressFamilies": get_afs(network_design),

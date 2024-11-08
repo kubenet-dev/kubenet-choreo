@@ -1,6 +1,10 @@
 def reconcile(self):
   ni = self 
 
+  #if self.get("metdata", {}).get("deletionTimestamp", None) != None:
+  #  return reconcile_result(self, False, 0, "", False)
+
+  # this should work for create and delete
   err = update_sub_interface(self)
   if err != None:
     return reconcile_result(self, True, 0, err, True)

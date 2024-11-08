@@ -1,0 +1,13 @@
+apiVersion: choreo.kform.dev/v1alpha1
+kind: UpstreamRef
+metadata:
+  name: config
+spec:
+  type: crd
+  url: https://github.com/sdcio/config-server.git
+  ref:
+    type: hash
+    name: 6b3bc81239f9b545f8c898c1f0ae976977c663b9
+  includes:
+  - config.sdcio.dev_configs
+  - config.sdcio.dev_runningconfigs

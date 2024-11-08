@@ -71,6 +71,8 @@ def get_bgp_neighbors_per_af(si, af):
         "region": spec.get("region", ""),
         "site": spec.get("site", ""),
         "node": spec.get("node", ""),
+        "provider": spec.get("provider", ""),
+        "platformType": spec.get("platformType", ""),
         "localAddress": local_address,
         "localAS": local_asn,
         "peerAddress": peer_address,

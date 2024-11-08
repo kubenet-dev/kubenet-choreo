@@ -5,6 +5,7 @@ metadata:
   name: device.network.kubenet.dev.bgpdynamicneighbors.x
 spec: 
   conditionType: "Ready"
+  specUpdate: true
   for: 
     group: device.network.kubenet.dev
     version: v1alpha1

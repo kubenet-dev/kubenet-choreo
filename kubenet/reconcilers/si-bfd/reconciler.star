@@ -17,6 +17,8 @@ def get_bfd(si):
       "region": spec.get("region", ""),
       "site": spec.get("site", ""),
       "node": spec.get("node", ""),
+      "provider": spec.get("provider", ""),
+      "platformType": spec.get("platformType", ""),
       "port": int(spec.get("port", 0)),
       "endpoint": int(spec.get("endpoint", 0)),
       "name": spec.get("name", ""),

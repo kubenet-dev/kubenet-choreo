@@ -27,3 +27,6 @@ spec:
       match:
         metadata.name: spec.partition
         status.conditions.exists(c, c.type == 'Ready' && c.status == 'True'): "true"
+
+# todo can we add a watch for node changes ?
+# need to dig up endpoints

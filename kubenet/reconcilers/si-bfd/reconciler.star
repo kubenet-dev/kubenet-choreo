@@ -44,6 +44,5 @@ def get_bfd(si):
     },
     "spec": filtered_bfd_spec
   }
-  print("bfd", bfd)
   return bfd
   

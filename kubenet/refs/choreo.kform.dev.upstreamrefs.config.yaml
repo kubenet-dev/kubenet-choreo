@@ -7,7 +7,7 @@ spec:
   url: https://github.com/sdcio/config-server.git
   ref:
     type: hash
-    name: 6b3bc81239f9b545f8c898c1f0ae976977c663b9
+    name: cb752b9df3fe1ca9285a40e10d44dc87cd021162
   includes:
   - config.sdcio.dev_configs
   - config.sdcio.dev_runningconfigs

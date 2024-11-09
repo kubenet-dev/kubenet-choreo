@@ -72,7 +72,7 @@ def get_routing_policy(node, policy_name, statements = [], defaultAction = None)
 
   # update platform and platformType
 
-  nodespec = node.get("spec", {})
+  node_spec = node.get("spec", {})
   policy = {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
     "kind": "RoutingPolicy",
@@ -81,12 +81,12 @@ def get_routing_policy(node, policy_name, statements = [], defaultAction = None)
       "namespace": namespace,
     },
     "spec": {
-      "partition": nodespec.get("partition", ""),
-      "region": nodespec.get("region", ""),
-      "site": nodespec.get("site", ""),
-      "node": nodespec.get("node", ""),
-      "provider": nodespec.get("provider", ""),
-      "platformType": nodespec.get("platformType", ""),
+      "partition": node_spec.get("partition", ""),
+      "region": node_spec.get("region", ""),
+      "site": node_spec.get("site", ""),
+      "node": node_spec.get("node", ""),
+      "provider": node_spec.get("provider", ""),
+      "platformType": node_spec.get("platformType", ""),
       "name": policy_name.lower(),
       "defaultAction": defaultAction,
     },
@@ -129,7 +129,7 @@ def get_prefix_set(node, name, prefixes):
   node_name = node.get("metadata", {}).get("name", "")
   namespace = node.get("metadata", {}).get("namespace", "")
 
-  nodespec = node.get("spec", {})
+  node_spec = node.get("spec", {})
   return {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
     "kind": "PrefixSet",
@@ -138,10 +138,12 @@ def get_prefix_set(node, name, prefixes):
         "namespace": namespace,
     },
     "spec": {
-      "partition": nodespec.get("partition", ""),
-      "region": nodespec.get("region", ""),
-      "site": nodespec.get("site", ""),
-      "node": nodespec.get("node", ""),
+      "partition": node_spec.get("partition", ""),
+      "region": node_spec.get("region", ""),
+      "site": node_spec.get("site", ""),
+      "node": node_spec.get("node", ""),
+      "provider": node_spec.get("provider", ""),
+      "platformType": node_spec.get("platformType", ""),
       "name": name.lower(),
       "prefixes": prefixes,
     },

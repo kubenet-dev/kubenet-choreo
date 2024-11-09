@@ -35,13 +35,8 @@ def reconcile(self):
 
 def get_node_interfaces(node):
   namespace = node.get("metadata", {}).get("namespace", "")
+  node_name = node.get("metadata", {}).get("name", "")
   node_spec = node.get("spec", {})
-  partition = node_spec.get("partition", "")
-  region = node_spec.get("region", "")
-  site = node_spec.get("site", "")
-  node_name = node_spec.get("node", "")
-
-  # update platform and platformType
 
   interfaces = []
   for ifname in ["system", "irb"]:
@@ -49,14 +44,16 @@ def get_node_interfaces(node):
       "apiVersion": "device.network.kubenet.dev/v1alpha1",
       "kind": "Interface",
       "metadata": {
-          "name": ".".join([partition, region, site, node_name, str(0), str(0), ifname]),
+          "name": ".".join([node_name, str(0), str(0), ifname]),
           "namespace": namespace,
       },
       "spec": {
-        "partition": partition,
-        "region": region,
-        "site": site,
-        "node": node_name,
+        "partition": node_spec.get("partition", ""),
+        "region": node_spec.get("region", ""),
+        "site": node_spec.get("site", ""),
+        "node": node_spec.get("node", ""),
+        "provider": node_spec.get("provider", ""),
+        "platformType": node_spec.get("platformType", ""),
         "port": 0,
         "endpoint": 0,
         "name": ifname,
@@ -69,12 +66,8 @@ def get_node_interfaces(node):
 
 def get_node_subinterface(node, network_design):
   namespace = node.get("metadata", {}).get("namespace", "")
+  node_name = node.get("metadata", {}).get("name", "")
   node_spec = node.get("spec", {})
-  partition = node_spec.get("partition", "")
-  region = node_spec.get("region", "")
-  site = node_spec.get("site", "")
-  node_name = node_spec.get("node", "")
-
 
   addresses_ipv4, err = get_node_addresses(node, network_design, "ipv4", "ipv4numbered")
   if err != None:
@@ -87,14 +80,16 @@ def get_node_subinterface(node, network_design):
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
     "kind": "SubInterface",
     "metadata": {
-        "name": ".".join([partition, region, site, node_name, str(0), str(0), "system", str(0)]),
+        "name": ".".join([node_name, str(0), str(0), str(0), "system"]),
         "namespace": namespace,
     },
     "spec": {
-      "partition": partition,
-      "region": region,
-      "site": site,
-      "node": node_name,
+      "partition": node_spec.get("partition", ""),
+      "region": node_spec.get("region", ""),
+      "site": node_spec.get("site", ""),
+      "node": node_spec.get("node", ""),
+      "provider": node_spec.get("provider", ""),
+      "platformType": node_spec.get("platformType", ""),
       "port": 0,
       "endpoint": 0,
       "name": "system",

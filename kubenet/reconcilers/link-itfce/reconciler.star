@@ -39,17 +39,18 @@ def get_interfaces(link):
   namespace = link.get("metadata", {}).get("namespace", "")
   interfaces = []
   for endpoint in link.get("spec", {}).get("endpoints", []):
-    ep_name = get_endpoint_name(endpoint, "interface")
+    ep_name = get_endpoint_name(endpoint)
     ep = get_resource("infra.kuid.dev/v1alpha1", "Endpoint")
     rsp = client_get(ep_name, namespace, ep["resource"])
     if rsp["error"] != None:
       return None, rsp["error"]
     
+    node_name = get_node_name(endpoint)
     node = get_resource("infra.kuid.dev/v1alpha1", "Node")
-    rsp = client_get(ep_name, namespace, ep["resource"])
+    rsp = client_get(node_name, namespace, node["resource"])
     if rsp["error"] != None:
       return None, rsp["error"]
-    node_spec = node.get("spec", {})
+    node_spec = rsp.get("resource", {}).get("spec", {})
       
     interface = {
       "apiVersion": "device.network.kubenet.dev/v1alpha1",
@@ -89,7 +90,7 @@ def get_subinterfaces(link, network_design, interfaces):
   eps = []
   for endpoint in link_endpoints:
     ep_info = {}
-    ep_name = get_endpoint_name(endpoint, "interface")
+    ep_name = get_endpoint_name(endpoint)
     
     underlay = network_design.get("spec", {}).get("interfaces", {}).get("underlay", {})
     af = "ipv4"      
@@ -110,32 +111,30 @@ def get_subinterfaces(link, network_design, interfaces):
 
     eps.append(ep_info)
   
-  id = 0
-  for endpoint in link_endpoints:
-    ep_name = get_endpoint_name(endpoint, "interface")
+  for idx, endpoint in enumerate(link_endpoints):
+    ep_name = get_endpoint_name(endpoint)
 
-    si = get_subinterface(ep_name, namespace, id, link_endpoints, eps, network_design, interfaces)
+    si = get_subinterface(ep_name, namespace, idx, link_endpoints, eps, network_design, interfaces)
     subinterfaces.append(si)
 
-    id += 1
   return subinterfaces, None
 
 
-def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_design, interfaces):
-  local_addresses_ipv4, remote_addresses_ipv4 = get_addresses(id, eps_info, network_design, "ipv4", "ipv4numbered", "ipv4unnumbered")
-  local_addresses_ipv6, remote_addresses_ipv6 = get_addresses(id, eps_info, network_design, "ipv6", "ipv6numbered", "ipv6unnumbered")
+def get_subinterface(name, namespace, idx, link_endpoints, eps_info, network_design, interfaces):
+  local_addresses_ipv4, remote_addresses_ipv4 = get_addresses(idx, eps_info, network_design, "ipv4", "ipv4numbered", "ipv4unnumbered")
+  local_addresses_ipv6, remote_addresses_ipv6 = get_addresses(idx, eps_info, network_design, "ipv6", "ipv6numbered", "ipv6unnumbered")
   
-  local_endpoint = link_endpoints[id % 2]
-  remote_endpoint = link_endpoints[(id + 1) % 2]
+  local_endpoint = link_endpoints[idx % 2]
+  remote_endpoint = link_endpoints[(idx + 1) % 2]
 
-  interface = interfaces[id % 2]
+  interface = interfaces[idx % 2]
   interface_spec = interface.get("spec", {})
 
   return {
     "apiVersion": "device.network.kubenet.dev/v1alpha1",
     "kind": "SubInterface",
     "metadata": {
-        "name": name,
+        "name": ".".join([name, str(0)]),
         "namespace": namespace,
     },
     "spec": {
@@ -149,7 +148,7 @@ def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_desi
       "adaptor": local_endpoint.get("adaptor", ""),
       "endpoint": int(local_endpoint.get("endpoint", 0)),
       "name": "interface",
-      "id": id,
+      "id": 0,
       "enabled": True,
       "type": "routed",
       "ipv4": local_addresses_ipv4,
@@ -163,7 +162,7 @@ def get_subinterface(name, namespace, id, link_endpoints, eps_info, network_desi
         "adaptor": remote_endpoint.get("adaptor", ""),
         "endpoint": int(remote_endpoint.get("endpoint", 0)),
         "name": "interface",
-        "id": id,
+        "id": 0,
         "ipv4": remote_addresses_ipv4,
         "ipv6": remote_addresses_ipv6,
 
@@ -190,7 +189,14 @@ def get_addresses(id, ep_info, network_design, af, numbered, unnumbered):
     remote_addresses = None
   return local_addresses, remote_addresses
 
-def get_endpoint_name(endpoint, name):
+def get_node_name(endpoint):
+  partition = endpoint.get("partition", "")
+  region = endpoint.get("region", "")
+  site = endpoint.get("site", "")
+  node = endpoint.get("node", "")
+  return ".".join([partition,region,site,node])
+
+def get_endpoint_name(endpoint):
   partition = endpoint.get("partition", "")
   region = endpoint.get("region", "")
   site = endpoint.get("site", "")
@@ -198,9 +204,7 @@ def get_endpoint_name(endpoint, name):
   port = int(endpoint.get("port", 0))
   ep = int(endpoint.get("endpoint", 0))
 
-  if name == "" or name == "interface":
-    return ".".join([partition,region,site,node,str(port),str(ep)])
-  return ".".join([partition,region,site,node,str(port),str(ep), name])
+  return ".".join([partition,region,site,node,str(port),str(ep)])
 
 def get_ipclaim(name, namespace):
   resource = get_resource("ipam.be.kuid.dev/v1alpha1", "IPClaim")

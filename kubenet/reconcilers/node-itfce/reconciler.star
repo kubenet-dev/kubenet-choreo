@@ -19,12 +19,12 @@ def reconcile(self):
     if rsp["error"] != None:
       return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
 
-  subinterface, err = get_node_subinterface(self, network_design)
-  if err != None:
-    return reconcile_result(self, True, 0, err, False)
-  rsp = client_create(subinterface)
-  if rsp["error"] != None:
-    return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
+  #subinterface, err = get_node_subinterface(self, network_design)
+  #if err != None:
+  #  return reconcile_result(self, True, 0, err, False)
+  #rsp = client_create(subinterface)
+  #if rsp["error"] != None:
+  #  return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
   
   rsp = client_create(get_network_instance(self))
   if rsp["error"] != None:
@@ -39,6 +39,7 @@ def get_node_interfaces(node):
   node_spec = node.get("spec", {})
 
   interfaces = []
+  return interfaces
   for ifname in ["system", "irb"]:
     interface = {
       "apiVersion": "device.network.kubenet.dev/v1alpha1",

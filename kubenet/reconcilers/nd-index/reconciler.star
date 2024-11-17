@@ -12,9 +12,9 @@ def reconcile(self):
   if rsp["error"] != None:
     return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
   
-  #genidindex = get_genidindex(self)
-  #rsp = client_create(genidindex)
-  #if rsp["error"] != None:
-  #  return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
+  genidindex = get_genidindex(self)
+  rsp = client_create(genidindex)
+  if rsp["error"] != None:
+    return reconcile_result(self, True, 0, rsp["error"], rsp["fatal"])
 
   return reconcile_result(self, False, 0, "", False)

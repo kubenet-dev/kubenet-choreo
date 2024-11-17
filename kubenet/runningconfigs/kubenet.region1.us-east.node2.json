@@ -1804,27 +1804,6 @@
     {
       "name": "ethernet-1/1",
       "admin-state": "enable"
-    },
-    {
-      "name": "mgmt0",
-      "admin-state": "enable",
-      "subinterface": [
-        {
-          "index": 0,
-          "admin-state": "enable",
-          "ip-mtu": 1500,
-          "ipv4": {
-            "admin-state": "enable",
-            "dhcp-client": {
-            }
-          },
-          "ipv6": {
-            "admin-state": "enable",
-            "dhcp-client": {
-            }
-          }
-        }
-      ]
     }
   ],
   "system": {
@@ -2135,11 +2114,6 @@
       "type": "ip-vrf",
       "admin-state": "enable",
       "description": "Management network instance",
-      "interface": [
-        {
-          "name": "mgmt0.0"
-        }
-      ],
       "protocols": {
         "linux": {
           "import-routes": true,

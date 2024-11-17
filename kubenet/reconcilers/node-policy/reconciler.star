@@ -118,9 +118,9 @@ def get_prefixes(network_design, prefix_type, af):
   af_prefixes = []
   for prefix in prefixes:
     p = prefix.get("prefix", "")
-    if af == "ipv4" and isIPv4(p):
+    if af == "ipv4" and is_ipv4(p):
       af_prefixes.append(p)
-    if af == "ipv6" and isIPv6(p):
+    if af == "ipv6" and is_ipv6(p):
       af_prefixes.append(p)
   return af_prefixes
 

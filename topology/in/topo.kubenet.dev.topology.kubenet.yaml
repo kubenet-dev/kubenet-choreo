@@ -9,6 +9,7 @@ spec:
     region: region1
     site: us-east
     platformType: ixrd3
+    version: 
   nodes:
   - name: node1
   - name: node2

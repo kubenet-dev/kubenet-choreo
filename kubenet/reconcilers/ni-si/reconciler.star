@@ -7,7 +7,7 @@ def reconcile(self):
   # this should work for create and delete
   err = update_sub_interface(self)
   if err != None:
-    return reconcile_result(self, True, 0, err, True)
+    return reconcile_result(self, True, 0, err, False)
 
   return reconcile_result(self, False, 0, "", False)
 
@@ -42,6 +42,9 @@ def update_sub_interface(ni):
       "id": int(si_spec.get("id", 0))
     }
     interfaces.append(interface)
+  
+  if len(interfaces) == 0:
+    return "cannot update networkInstance without interfaces"
   
   # Sort interfaces by multiple keys
   interfaces = insertion_sort(interfaces, lambda x: (x.get('id'), x.get('endpoint'), x.get('port'), x.get('name')))
